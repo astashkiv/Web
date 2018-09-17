@@ -1,4 +1,4 @@
-/*-Fon-*/
+/*-Font-*/
 
 * {
     font-family: 'Arial', sans-serif;
@@ -23,6 +23,10 @@
 
 /*--Header-*/
 
+body {
+	margin: 0px;
+}
+	
 
 .header {
     background-image: linear-gradient(to right, #EDEFF3, #fff);
@@ -31,9 +35,10 @@
     font: normal 16px sans-serif;
     display: flex;
     align-content: center;
+	position: fixed;
 }
 
-.header .header-left p {
+.header .header-menu p {
     font-size: 14px;
     margin: 0;
 }
@@ -53,7 +58,7 @@
 }
 
 
-.header .header-right {
+.header .header-logo {
     display: flex;
 	margin-left: 550px;
 }
@@ -64,7 +69,7 @@
 
 }
 
-.header-left {
+.header-menu {
 	padding-left: 150px; 
     text-align: center;
     vertical-align: middle;
@@ -78,11 +83,11 @@
 	height: 450px;
 }
 
-.section-content {
+.info-content {
   height: 100%;
 }
 
-.section-header {
+.info-header {
     padding-top: 30px;
 	padding-bottom: 30px;
     color: white;
@@ -90,16 +95,16 @@
     font-size: 20px;
 }
 
-.section-header h2 {
+.info-header h2 {
 	color: black;
 }	
 
-.section-body {
+.info-body {
 	padding-bottom: 60px;
 	background-image: linear-gradient(to top, #EDEFF3, #fff);
 }
 
-.section-body p {
+.info-body p {
 	padding-right: 30px;
 	padding-left: 250px;
 	font-size: 18px;
@@ -109,7 +114,7 @@
 	float: left;
 }
 
-.section-body video {
+.info-body video {
     float: right;
 	
 }
@@ -118,7 +123,6 @@
 /*-Dropdown-*/
 
 .navbar {
-    overflow: hidden;
     text-align: center;
     display: inline-block;
     padding: 30px 5px;
