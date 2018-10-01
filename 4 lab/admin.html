@@ -27,10 +27,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="index.html">Main <span class="sr-only"></span></a>
+                    <a class="nav-link" href="index.html">Main <span class="sr-only"></span></a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="/matches.html" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="matches.html" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Matches
         </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -49,7 +49,7 @@
                     <a class="nav-link" href="contacts.html">Contacts</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="admin.html">Admin</a>
+                    <a class="nav-link active" href="admin.html">Admin</a>
                 </li>
             </ul>
 
@@ -58,44 +58,40 @@
                 <img src="img/logo.png" height="55" alt="">
         </a>
     </nav>
-    <div class="jumbotron jumbotron-fluid">
-    </div>
-<div class="container-fluid">
-        <div class="section">
-            <div class="header">
-                <h2>Історія команди</h2>
+
+    <div class="container-fluid">
+		<div class="title">
+        <h2>Додати новину</h2>
+		</div>	
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-9">
+				<div class="news-image-add">
+                <img src="img/slider.jpeg" alt="" width="100%">
+				</div>
             </div>
-            <div class="main-content">
-
-                 <div class="row justify-content-center">
-                    <div class="col-md-5">
-					Кьо́рлінг, Кьо́рлінґ, Ке́рлінг, Ке́рлінґ, — олімпійський вид спорту, командна спортивна гра на крижаному майданчику. За своїм принципом гра схожа на боулінг на траві. Гра складна, як технічно, так і стратегічно. Кьорлінґ входить до програми Олімпійських ігор, починаючи з Олімпіади 1998 в Нагано.
-                    </div>
-					<div class="col-lg-5">
-						<iframe width="100%" height="250" src="https://www.youtube.com/embed/IOk9SVzqHsk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-					</div>
-                </div>
-
-			</div>
+            <div class="col-12 col-md-3">
+                <button type="button" class="btn btn-primary ">Додати зображення</button>
+            </div>
         </div>
-		
-		<div class="section">
-            <div class="header">
-                <h2>Найкращі моменти кьорлінгу 2017</h2>
-            </div>
-            <div class="main-content">
-                 <div class="row">
-				 
-					<div class="col-md-6 offset-md-3">
-						<iframe width="100%" height="350" src="https://www.youtube.com/embed/IOk9SVzqHsk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>          
 
-					</div>
-                </div>
-			</div>
+        <div class="row justify-content-center ">
+            <div class="col-12">
+                <form class="input-form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Назва новини">
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Текст новини" rows="6"></textarea>
+                    </div>
+
+                   <div class="col-12 button-send">
+				<button type="button" class="btn btn-primary btn-lg btn-block">Відправити статтю</button>
+               </div>
+                </form>
+            </div>
+        </div>
 		</div>
-		</div>
-		</div>		
-        <footer class="footer">
+               <footer class="footer">
             <div class="row">
                 <div class="col-md-12">
                         <p>Всеукраїнська федерація кьорлінгу © 2018</p>
@@ -103,7 +99,8 @@
                 </div>
             </div>
         </footer>
-	
+    </div>
+
 
 
     <!-- Optional JavaScript -->
