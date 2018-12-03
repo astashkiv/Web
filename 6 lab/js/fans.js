@@ -8,7 +8,7 @@ function onClick() {
     let commentsRow = document.getElementById("comments");
     let commentInput = document.getElementById("commentFormControlTextarea");
 
-    if (commentInput.value == "" || commentInput.value == " " || commentInput.value.length == 0) {
+    if (commentInput.value.trim() == "" || commentInput.value == " " || commentInput.value.length == 0) {
         alert("ВВЕДІТЬ КОМЕНТАР І СПРОБУЙТЕ ЩЕ РАЗ!")
     } else {
         let comment = document.createElement('div');
