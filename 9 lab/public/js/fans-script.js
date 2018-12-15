@@ -8,11 +8,13 @@ Storage.prototype.getObj = function (key) {
     return JSON.parse(this.getItem(key))
 }
 
+window.addEventListener('online', checkStorage);
+
 let useLocalStorage = false;
 
 let storage = window.localStorage;
 let buttonAddComment = document.getElementById("addComment");
-let commentsRow = document.getElementById("comments");
+var commentsRow = document.getElementById("comments");
 buttonAddComment.onclick = onClick;
 
 let requestDB = self.indexedDB.open('LAB_DB', 4);
@@ -20,8 +22,14 @@ let db = null;
 let productsStore = null;
 
 useIndexedDb();
+checkStorage();
 
 
+
+
+function isOnline() {
+    return window.navigator.onLine;
+}
 
 function onClick() {
     let commentInput = document.getElementById("commentFormControlTextarea");
@@ -31,25 +39,28 @@ function onClick() {
     } else {
 
 
-        let commentHTML = document.createElement('div');
+//        let commentHTML = document.createElement('div');
         let date = new Date();
+//
+//        commentHTML.className = "col-12 fan-comment";
+//        commentHTML.innerHTML = `${commentInput.value}
+//                <br>
+//                <div class="info">
+//                    <span class="date">
+//                        ${date}
+//                    </span>
+//                    <span class="nickname">
+//                        user
+//                    </span>
+//                </div>
+//                <hr>`;
 
-        commentHTML.className = "col-12 fan-comment";
-        commentHTML.innerHTML = `${commentInput.value}
-                <br>
-                <div class="info">
-                    <span class="date">
-                        ${date}
-                    </span>
-                    <span class="nickname">
-                        user
-                    </span>
-                </div>
-                <hr>`;
 
 
-
-        let comment = { commentInput: commentInput.value, date: date };
+        let comment = {
+            commentInput: commentInput.value,
+            date: date
+        };
         let commentJSON = JSON.stringify(comment);
 
         if (useLocalStorage) {
@@ -63,7 +74,6 @@ function onClick() {
 
         }
 
-        commentsRow.appendChild(commentHTML);
         commentInput.value = "";
     }
 }
@@ -82,8 +92,14 @@ function useIndexedDb() {
 
     requestDB.onupgradeneeded = function (event) {
         var db = event.target.result;
-        db.createObjectStore('fans', { keyPath: 'id', autoIncrement: true });
-        db.createObjectStore('news', { keyPath: 'id', autoIncrement: true });
+        db.createObjectStore('fans', {
+            keyPath: 'id',
+            autoIncrement: true
+        });
+        db.createObjectStore('news', {
+            keyPath: 'id',
+            autoIncrement: true
+        });
     };
 
 
@@ -112,8 +128,9 @@ function addData(data) {
 }
 
 function getData(processData) {
-
-    // create transaction from database
+    
+    if(isOnline()) {
+        // create transaction from database
     let transaction = db.transaction('fans', 'readwrite');
     let data = [];
 
@@ -132,29 +149,37 @@ function getData(processData) {
         data = event.target.result;
         processData(data);
     };
+    }
+
     
+
 
 }
 
 function checkStorage() {
 
-    
-    if (useLocalStorage) {
-        let comments = storage.getObj("comments");
+    if(isOnline()){
+        if (useLocalStorage) {
+            let comments = storage.getObj("comments");
 
-        drawComments(comments);
+            if (comments == null) {
+                storage.setObj("comments", new Array());
+            }
 
-        if (comments == null) {
-            storage.setObj("comments", new Array());
+
+
+            drawComments(comments);
+
+
+        } else {
+            getData(drawCommentsForIndexDB);
         }
-    } else {
-        getData(drawCommentsForIndexDB);
     }
-
 
 }
 
 function drawComments(comments) {
+    commentsRow.innerHTML= "";
     if (comments.length > 0) {
         comments.forEach(commentValue => {
             commentValue = JSON.parse(commentValue);
@@ -180,6 +205,7 @@ function drawComments(comments) {
 }
 
 function drawCommentsForIndexDB(comments) {
+    commentsRow.innerHTML= "";
     if (comments.length > 0) {
         comments.forEach(commentValue => {
 

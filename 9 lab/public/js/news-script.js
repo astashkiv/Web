@@ -1,3 +1,4 @@
+
 'use strict'
 
 Storage.prototype.setObj = function (key, obj) {
@@ -6,6 +7,9 @@ Storage.prototype.setObj = function (key, obj) {
 Storage.prototype.getObj = function (key) {
     return JSON.parse(this.getItem(key))
 }
+
+window.addEventListener('online', checkStorage);
+window.addEventListener('online', drawNews);
 
 let useLocalStorage = false;
 
@@ -16,18 +20,19 @@ let requestDB = self.indexedDB.open('LAB_DB', 4);
 let db = null;
 let productsStore = null;
 
+function isOnline() {
+    return window.navigator.onLine;
+}
 
-//useIndexedDb();
-//checkStorage();
 
 class Newsmaker {
 
-     useIndexedDb() {
+    useIndexedDb() {
 
         requestDB.onsuccess = function (event) {
             // get database from event
             db = event.target.result;
-            checkStorage();
+            //checkStorage();
         };
 
         requestDB.onerror = function (event) {
@@ -36,8 +41,14 @@ class Newsmaker {
 
         requestDB.onupgradeneeded = function (event) {
             var db = event.target.result;
-            db.createObjectStore('fans', { keyPath: 'id', autoIncrement: true });
-            db.createObjectStore('news', { keyPath: 'id', autoIncrement: true });
+            db.createObjectStore('fans', {
+                keyPath: 'id',
+                autoIncrement: true
+            });
+            db.createObjectStore('news', {
+                keyPath: 'id',
+                autoIncrement: true
+            });
         };
 
 
@@ -96,15 +107,16 @@ function getData(processData) {
 
 
 function drawNews(news) {
-    if (news.length > 0) {
+    if (news.length > 0 && isOnline()) {
         news.forEach(newsValue => {
 
-                if(useLocalStorage) {
-                    newsValue = JSON.parse(newsValue);
-                }
-                let news = document.createElement('div');
+            if (useLocalStorage) {
+                newsValue = JSON.parse(newsValue);
+            }
 
-                news.className = "col-xl-3 col-md-6 col-sm-12";
+            let news = document.createElement('a');
+
+           news.className = "col-xl-3 col-md-6 col-sm-12";
                 news.innerHTML = `
                 <div class="card">
                     <img src="img/slider.jpeg" alt="">
@@ -113,7 +125,7 @@ function drawNews(news) {
                         ${newsValue.newsInput}
                     </div>
                 </div>`;
-                newsList.appendChild(news);
+              newsList.appendChild(news);
         });
         //storage.setObj("comments", new Array());
     }

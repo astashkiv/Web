@@ -1,26 +1,27 @@
 'use strict'
 
-
-Storage.prototype.setObj = function (key, obj) {
+Storage.prototype.setObj = function(key, obj) {
     return this.setItem(key, JSON.stringify(obj))
 }
-Storage.prototype.getObj = function (key) {
+Storage.prototype.getObj = function(key) {
     return JSON.parse(this.getItem(key))
 }
 
-let useLocalStorage = true;
+window.addEventListener('online', checkStorage);
 
 let storage = window.localStorage;
 let buttonAddComment = document.getElementById("addComment");
 let commentsRow = document.getElementById("comments");
 buttonAddComment.onclick = onClick;
 
-let requestDB = self.indexedDB.open('LAB_DB', 4);
-let db = null;
-let productsStore = null;
 
-useIndexedDb();
+checkStorage();
 
+
+
+function isOnline() {
+    return window.navigator.onLine;
+}
 
 
 function onClick() {
@@ -30,132 +31,37 @@ function onClick() {
         alert("Чистий комментар")
     } else {
 
+        if (isOnline()) {
+            console.log("IS online");
+            unloadData();
+        } else {
 
-        let commentHTML = document.createElement('div');
-        let date = new Date();
+            let date = new Date();
 
-        commentHTML.className = "col-12 fan-comment";
-        commentHTML.innerHTML = `${commentInput.value}
-                <br>
-                <div class="info">
-                    <span class="date">
-                        ${date}
-                    </span>
-                    <span class="nickname">
-                        user
-                    </span>
-                </div>
-                <hr>`;
-
-
-
-        let comment = { commentInput: commentInput.value, date: date };
-        let commentJSON = JSON.stringify(comment);
-
-        if (useLocalStorage) {
+            let commentJSON = JSON.stringify({commentInput: commentInput.value, date: date});
             let comments = storage.getObj("comments");
             comments.push(commentJSON)
 
             storage.setObj("comments", comments);
-            getData();
-        } else {
-            addData(comment);
+
 
         }
-
-        commentsRow.appendChild(commentHTML);
         commentInput.value = "";
     }
 }
 
-function useIndexedDb() {
-
-    requestDB.onsuccess = function (event) {
-        // get database from event
-        db = event.target.result;
-        checkStorage();
-    };
-
-    requestDB.onerror = function (event) {
-        console.log('[onerror]', requestDB.error);
-    };
-
-    requestDB.onupgradeneeded = function (event) {
-        var db = event.target.result;
-        db.createObjectStore('fans', { keyPath: 'id', autoIncrement: true });
-        db.createObjectStore('news', { keyPath: 'id', autoIncrement: true });
-    };
-
-
-}
-
-function addData(data) {
-    // create transaction from database
-    let transaction = db.transaction('fans', 'readwrite');
-
-    // add success event handleer for transaction
-    // you should also add onerror, onabort event handlers
-    transaction.onsuccess = function (event) {
-        console.log('[Transaction] ALL DONE!');
-    };
-
-    // get store from transaction
-    productsStore = transaction.objectStore('fans');
-
-    // put products data in productsStore
-
-    var db_op_req = productsStore.add(data);
-
-    db_op_req.onsuccess = function (event) {
-        console.log("ADDED"); // true
-    }
-}
-
-function getData(processData) {
-
-    // create transaction from database
-    let transaction = db.transaction('fans', 'readwrite');
-    let data = [];
-
-    // add success event handleer for transaction
-    // you should also add onerror, onabort event handlers
-    transaction.onsuccess = function (event) {
-        console.log('[Transaction] ALL DONE!');
-    };
-
-    // get store from transaction
-    productsStore = transaction.objectStore('fans');
-
-    // put products data in productsStore
-
-    productsStore.getAll().onsuccess = function (event) {
-        data = event.target.result;
-        processData(data);
-    };
-    
-
+function sendDataToServer(comment) {
+    storage.setObj("comments", new Array());
 }
 
 function checkStorage() {
+    let comments = storage.getObj("comments");
 
-    
-    if (useLocalStorage) {
-        let comments = storage.getObj("comments");
-
-        drawComments(comments);
-
-        if (comments == null) {
-            storage.setObj("comments", new Array());
-        }
-    } else {
-        getData(drawCommentsForIndexDB);
+    if (comments == null) {
+        storage.setObj("comments", new Array());
     }
 
-
-}
-
-function drawComments(comments) {
-    if (comments.length > 0) {
+    if (comments.length > 0 && isOnline()) {
         comments.forEach(commentValue => {
             commentValue = JSON.parse(commentValue);
             let comment = document.createElement('div');
@@ -175,31 +81,17 @@ function drawComments(comments) {
 
             commentsRow.appendChild(comment);
         });
-        //storage.setObj("comments", new Array());
+        storage.setObj("comments", new Array());
     }
 }
 
-function drawCommentsForIndexDB(comments) {
+function unloadData() {
+    console.log("Online");
+    let comments = storage.getObj("comments");
+
     if (comments.length > 0) {
-        comments.forEach(commentValue => {
-
-            let comment = document.createElement('div');
-
-            comment.className = "col-12 fan-comment";
-            comment.innerHTML = `${commentValue.commentInput}
-                    <br>
-                    <div class="info">
-                        <span class="date">
-                            ${commentValue.date}
-                        </span>
-                        <span class="nickname">
-                            user
-                        </span>
-                    </div>
-                    <hr>`;
-
-            commentsRow.appendChild(comment);
-        });
-        //storage.setObj("comments", new Array());
+        sendDataToServer(comments);
+        storage.setObj("comments", new Array());
     }
 }
+
